@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useLayoutEffect } from 'react';
+import { Route, Switch, Router } from "react-router"
+import { createBrowserHistory } from 'history';
+import { Logs } from './components/Logs';
+import { Login } from './components/Login';
+import { SignUp } from './components/SignUp';
 
 function App() {
+  const history = createBrowserHistory()
+  useLayoutEffect(() => {
+    if (!(localStorage.getItem("token") === null && history.location.pathname === "/")) {
+      history.push("/")
+    }
+  }, [history])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={history}>
+      <Switch>
+        <Route exact path="/" component={Logs} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/sign-up" component={SignUp} />
+      </Switch>
+    </Router>
   );
 }
 
