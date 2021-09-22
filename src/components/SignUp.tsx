@@ -36,7 +36,7 @@ export function SignUp() {
 
 
     const login = useCallback(() => {
-        fetch("http://localhost:8080/users/sign-up", {
+        fetch("https://sep-auth.herokuapp.com/users/sign-up", {
             method: "POST",
             mode: "cors",
             body: JSON.stringify(input),
