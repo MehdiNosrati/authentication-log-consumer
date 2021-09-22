@@ -17,7 +17,7 @@ export function Logs() {
         if (localStorage.getItem("token") === null && history.location.pathname === "/") {
             history.push("/login")
         } else {
-            fetch("http://localhost:8080/logs", {
+            fetch("https://sep-auth.herokuapp.com/logs", {
                 headers: {
                     "Authorization": localStorage.getItem("token")!
                 }
