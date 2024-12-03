@@ -1,13 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
-ReactDOM.render(
+export const muiCache = createCache({
+  key: "mui",
+  prepend: true,
+});
+const container = document.getElementById("root");
+const root = createRoot(container!);
+
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <CacheProvider value={muiCache}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </CacheProvider>
+  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

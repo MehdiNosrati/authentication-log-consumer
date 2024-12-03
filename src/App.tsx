@@ -1,25 +1,27 @@
-import React, { useLayoutEffect } from 'react';
-import { Route, Switch, Router } from "react-router"
-import { createBrowserHistory } from 'history';
-import { Logs } from './components/Logs';
-import { Login } from './components/Login';
-import { SignUp } from './components/SignUp';
+import React, { useLayoutEffect } from "react";
+import { Route, Switch, useHistory } from "react-router-dom";
+import { Logs } from "./components/Logs";
+import { Login } from "./components/Login";
+import { SignUp } from "./components/SignUp";
 
 function App() {
-  const history = createBrowserHistory()
+  const history = useHistory();
   useLayoutEffect(() => {
-    if (!(localStorage.getItem("token") === null && history.location.pathname === "/")) {
-      history.push("/")
+    if (
+      !(
+        localStorage.getItem("token") === null &&
+        history.location.pathname === "/"
+      )
+    ) {
+      history.push("/");
     }
-  }, [history])
+  }, [history]);
   return (
-    <Router history={history}>
-      <Switch>
-        <Route exact path="/" component={Logs} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/sign-up" component={SignUp} />
-      </Switch>
-    </Router>
+    <Switch>
+      <Route exact path="/" component={Logs} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/sign-up" component={SignUp} />
+    </Switch>
   );
 }
 
