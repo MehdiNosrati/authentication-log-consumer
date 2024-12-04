@@ -45,7 +45,7 @@ export function SignUp() {
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const login = useCallback(() => {
+  const signUp = useCallback(() => {
     fetch("http://localhost:8080/users/sign-up", {
       method: "POST",
       mode: "cors",
@@ -133,7 +133,7 @@ export function SignUp() {
             className={classes.horizontalMargin}
             color="primary"
             variant="contained"
-            onClick={login}
+            onClick={signUp}
             endIcon={<ArrowForwardIosIcon />}
           >
             Sing Up

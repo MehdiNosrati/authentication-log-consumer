@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Container, Box, List, Button, Typography } from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Container,
+  Box,
+  List,
+  Button,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { useHistory } from "react-router";
 import { makeStyles } from "tss-react/mui";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type LogItem = {
   timestamp: number;
@@ -13,6 +21,24 @@ export function Logs() {
   const history = useHistory();
   const [logs, setLogs] = useState<LogItem[]>([]);
 
+  const fetchLogs = useCallback(() => {
+    fetch("http://localhost:8080/logs", {
+      headers: {
+        Authorization: localStorage.getItem("token")!,
+      },
+    })
+      .then((res) => {
+        if (res.status === 403) throw Error("Unauthorized");
+        return res.json();
+      })
+      .then((response: LogItem[]) => {
+        setLogs(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   useEffect(() => {
     if (
       localStorage.getItem("token") === null &&
@@ -20,23 +46,25 @@ export function Logs() {
     ) {
       history.push("/login");
     } else {
-      fetch("http://localhost:8080/logs", {
-        headers: {
-          Authorization: localStorage.getItem("token")!,
-        },
-      })
-        .then((res) => {
-          if (res.status === 403) throw Error("Unauthorized");
-          return res.json();
-        })
-        .then((response: LogItem[]) => {
-          setLogs(response);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      fetchLogs();
     }
   }, [history]);
+
+  const deleteLog = useCallback((logId: number) => {
+    fetch(`http://localhost:8080/logs/${logId}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        Authorization: localStorage.getItem("token")!,
+      },
+    })
+      .then((_res) => {
+        fetchLogs();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Container>
@@ -47,6 +75,10 @@ export function Logs() {
             return (
               <li key={item.id} className={classes.listItem}>
                 {new Date(item.timestamp).toString()}
+
+                <IconButton onClick={() => deleteLog(item.id)} color="error">
+                  <DeleteIcon />
+                </IconButton>
               </li>
             );
           })}
